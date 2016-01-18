@@ -18,19 +18,29 @@ class CreateCustomfieldsTables extends Migration
             $table->increments('id');
             $table->string('title', 25);
             $table->string('friendly_name', 150);
-            $table->string('value', 250)->nullable();
+            $table->string('default_value', 250)->nullable();
             $table->string('type', 25);
-            $table->tinyinteger('visibility');
+            $table->binary('register');
+            $table->binary('edit');
+            $table->binary('mandatory');
+            $table->binary('edit');
+            $table->text("html");
+            $table->string('entity', 100);
+
+            $table->timestamps();
+            $table->softDeletes();
+            $table->creation();
         });
 
         Schema::create('CustomValue', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('customfield')->unsigned();
-            $table->string('entity', 100);
-            $table->integer('registry');
             $table->string('value', 250)->nullable();
+
+            $table->morphs("entity");
             $table->timestamps();
             $table->softDeletes();
+            $table->creation();
 
             $table->foreign('customfield')->references('id')->on('CustomField');
         });
